@@ -110,7 +110,6 @@ export default {
       form:{},
       dialogFormVisible: false,
       multipleSelection: [],
-      headerBg: 'headerBg'
     }
   },
   created() {
