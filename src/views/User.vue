@@ -22,8 +22,11 @@
     >
       <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
     </el-popconfirm>
-    <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
-    <el-button round type="primary">export<i class="el-icon-top"></i></el-button>
+    <el-upload
+        action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+      <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
+    </el-upload>
+    <el-button round type="primary" @click="exp" class="ml-5">export<i class="el-icon-top"></i></el-button>
   </div>
 
   <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange" :row-class-name="rowClass" >
@@ -196,6 +199,13 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
+    exp(){
+      window.open("http://localhost:9090/user/export")
+    },
+    handleExcelImportSuccess(){
+      this.$message.success("import success!")
+      this.load()
+    }
   }
 }
 
