@@ -9,11 +9,20 @@
           <el-breadcrumb-item>{{ currentPathName }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <el-dropdown style="width: 70px; cursor: pointer">
-        <span>王小虎</span><i class="el-icon-arrow-down" style=" margin-left: 5px"></i>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>information</el-dropdown-item>
-          <el-dropdown-item>sign out</el-dropdown-item>
+
+      <el-dropdown style="width: 100px; cursor: pointer">
+        <div style="display: inline-block">
+          <img src="../assets/logo1.png" alt=""
+               style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
+          <span>cyq</span><i class="el-icon-arrow-down" style=" margin-left: 5px"></i>
+        </div>
+
+        <el-dropdown-menu slot="dropdown" style="width: 100px; text-align: center">
+          <el-dropdown-item style="font-size: 14px; padding: 5px 0">self-info</el-dropdown-item>
+
+          <el-dropdown-item style="font-size: 14px; padding: 5px 0">
+            <router-link to="/login" style="text-decoration: #FFC1C1">sign out</router-link>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
