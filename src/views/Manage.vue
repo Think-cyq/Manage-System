@@ -8,12 +8,12 @@
 
       <el-container>
         <el-header style=" border-bottom: 1px solid #ccc">
-          <Header :collapse-btn-class="collapseBtnClass" @collapse="collapse"/>
+          <Header :collapse-btn-class="collapseBtnClass" @collapse="collapse" :user="user"/>
         </el-header>
 
         <el-main>
 <!--表示当前页面的子路由会在<router-view/>里面展示-->
-          <router-view />
+          <router-view @refreshUser="getUser" />
         </el-main>
       </el-container>
     </el-container>
@@ -23,6 +23,7 @@
 
 import Aside from "@/components/Aside.vue";
 import Header from "@/components/Header.vue";
+import request from "@/utils/request";
 
 export default {
   name: 'Manage',
@@ -30,12 +31,17 @@ export default {
     return {
         collapseBtnClass: 'el-icon-s-fold',
         isCollapse: false,
-        sideWidth: 200
+        sideWidth: 200,
+        user: {}
     }
   },
   components:{
     Aside,
     Header
+  },
+  created() {
+    //从后台获取最新的后台数据
+    this.getUser()
   },
   methods: {
     collapse() {
@@ -48,6 +54,17 @@ export default {
             this.collapseBtnClass = 'el-icon-s-fold'
         }
     },
+
+    getUser() {
+      let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+      if (username) {
+        // 从后台获取User数据
+        request.get("/user/username/" + username).then(res => {
+          // 重新赋值后台的最新User数据
+          this.user = res.data
+        })
+      }
+    }
   }
 }
 </script>

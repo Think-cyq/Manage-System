@@ -1,33 +1,33 @@
 <template>
-  <div class="component-container">
+  <div class="user-container">
 
-  <div style="padding: 10px 0">
-    <el-input style="width: 300px"  placeholder="Please enter name" suffix-icon="el-icon-search" v-model="username"></el-input>
-    <el-input style="width: 300px" placeholder="please input your email" suffix-icon="el-icon-message" v-model="email"></el-input>
-    <el-input style="width: 300px" placeholder="Please enter address" suffix-icon="el-icon-position" v-model="address"></el-input>
-    <el-button round class="ml-5" type="primary" @click="load">Search</el-button>
-    <el-button round class="ml-5" type="success" @click="reset">reset</el-button>
-  </div>
+    <div style="padding: 10px 0">
+      <el-input style="width: 300px"  placeholder="Please enter name" suffix-icon="el-icon-search" v-model="username"></el-input>
+      <el-input style="width: 300px" placeholder="please input your email" suffix-icon="el-icon-message" v-model="email"></el-input>
+      <el-input style="width: 300px" placeholder="Please enter address" suffix-icon="el-icon-position" v-model="address"></el-input>
+      <el-button round class="ml-5" type="primary" @click="load">Search</el-button>
+      <el-button round class="ml-5" type="success" @click="reset">reset</el-button>
+    </div>
 
-  <div style="margin: 10px 0">
-    <el-button round type="primary" @click="handleAdd">add<i class="el-icon-circle-plus-outline"></i></el-button>
-    <el-popconfirm
-        class="ml-5"
-        confirm-button-text='ensure'
-        cancel-button-text='think again'
-        icon="el-icon-info"
-        icon-color="red"
-        title="Are you sure?"
-        @confirm="delBatch"
-    >
-      <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
-    </el-popconfirm>
-    <el-upload
-        action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
-      <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
-    </el-upload>
-    <el-button round type="primary" @click="exp" class="ml-5">export<i class="el-icon-top"></i></el-button>
-  </div>
+    <div style="margin: 10px 0">
+      <el-button round type="primary" @click="handleAdd">add<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-popconfirm
+          class="ml-5"
+          confirm-button-text='ensure'
+          cancel-button-text='think again'
+          icon="el-icon-info"
+          icon-color="red"
+          title="Are you sure?"
+          @confirm="delBatch"
+      >
+        <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
+      </el-popconfirm>
+      <el-upload
+          action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+        <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
+      </el-upload>
+      <el-button round type="primary" @click="exp" class="ml-5">export<i class="el-icon-top"></i></el-button>
+    </div>
 
   <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange" :row-class-name="rowClass" >
     <el-table-column type="selection" width="55"></el-table-column>
@@ -108,6 +108,7 @@ export default {
       pageSize: 5,
       username: "",
       nickname:"",
+      avatar:"",
       email:"",
       address:"",
       form:{},
@@ -119,8 +120,8 @@ export default {
     this.load()
   },
   methods: {
-    load(){
-      request.get("/user/page",{
+    load() {
+      request.get("/user/page", {
         params:{
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -130,15 +131,34 @@ export default {
           address: this.address
         }
       }).then(res => {
-
-        this.tableData = res.records
-        this.total = res.total
-      })
-
+        // 检查响应中是否有 records 字段
+        if (res.data && Array.isArray(res.data.records)) {
+          this.tableData = res.data.records;
+          this.total = res.data.total;
+        }
+      }).catch(error => {
+        // 这里处理请求失败的情况，比如网络错误或者服务器返回的错误状态码
+        // 可以根据不同的 HTTP 状态码来显示不同的错误信息
+        if (error.response) {
+          if (error.response.status === 401) {
+            // token 验证失败的处理
+            this.$message.error("Token verification failed, please log in again.");
+            // 可能需要重定向到登录页面或显示登录对话框
+            // this.$router.push('/login');
+          } else {
+            // 其他类型的错误处理
+            this.$message.error("An error occurred: " + error.response.statusText);
+          }
+        } else {
+          // 处理没有响应的情况（例如网络错误）
+          this.$message.error("Network error or no response from server.");
+        }
+      });
     },
+
     save(){
       request.post("/user",this.form).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("save success!")
           this.dialogFormVisible = false
           this.load()
@@ -163,7 +183,7 @@ export default {
     },
     del(id){
       request.delete("/user/" + id).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("delete success!")
           this.load()
         } else {
@@ -177,7 +197,7 @@ export default {
     delBatch(){
       let ids = this.multipleSelection.map(v => v.id) //[{},{},{}] => [1,2,3]
       request.post("/user/del/batch",ids).then(res => {
-        if(res){
+        if(res.data){
           this.$message.success("delete batch success!")
           this.load()
         } else {
@@ -221,10 +241,12 @@ export default {
   background: #FFF0F5!important;
 }
 
-.component-container {
+.user-container {
   /* 设置背景图片路径和属性 */
+  background-image: url("../assets/logo2.gif");
   background-color: #FFF0F5;
   background-size: cover; /* 设置背景图片尺寸 */
   background-position: center; /* 设置背景图片位置 */
+  height: 100%;
 }
 </style>

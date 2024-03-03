@@ -1,6 +1,6 @@
 <template>
-  <div class="component-container">
-    <div style="font-size: 12px;line-height: 60px; display: flex">
+  <div class="component-container" style="color: #FFE4E1">
+    <div style="font-size: 12px;line-height: 60px; display: flex; color: #FFC1C1">
       <div style="flex: 1">
         <span :class="collapseBtnClass" style="cursor: pointer;font-size: 20px" @click="SonCollapse"></span>
 
@@ -10,18 +10,20 @@
         </el-breadcrumb>
       </div>
 
-      <el-dropdown style="width: 100px; cursor: pointer">
+      <el-dropdown style="width: 100px; cursor: pointer" >
         <div style="display: inline-block">
-          <img src="../assets/logo1.png" alt=""
-               style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
-          <span>cyq</span><i class="el-icon-arrow-down" style=" margin-left: 5px"></i>
+          <img :src="user.avatar" alt=""
+               style="width: 30px; border-radius: 50%; height: 30px;position: relative; top: 10px; right: 5px">
+          <span>{{ user.nickname }}</span><i class="el-icon-arrow-down" style=" margin-left: 5px"></i>
         </div>
 
         <el-dropdown-menu slot="dropdown" style="width: 100px; text-align: center">
-          <el-dropdown-item style="font-size: 14px; padding: 5px 0">self-info</el-dropdown-item>
+          <el-dropdown-item style="font-size: 14px; padding: 5px 0">
+            <router-link to="/person">self-info</router-link>
+          </el-dropdown-item>
 
           <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-            <router-link to="/login" style="text-decoration: #FFC1C1">sign out</router-link>
+            <span style="text-decoration: #FFC1C1" @click="logout">logout</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -34,6 +36,7 @@ export default {
   name:"Header",
   props: {
     collapseBtnClass: String,
+    user: Object
   },
   computed: {
     currentPathName(){
@@ -46,9 +49,18 @@ export default {
       console.log(newVal)
     }
   },
+  data(){
+    return {
+    }
+  },
   methods: {
     SonCollapse() {
       this.$emit('collapse');
+    },
+    logout(){
+      this.$router.push("/login")
+      localStorage.removeItem("user")
+      this.$message.success("logout success!")
     }
   }
 }
@@ -57,10 +69,6 @@ export default {
 <style>
 .component-container {
   /* 设置背景图片路径和属性 */
-  background-image: url('../assets/logo2.gif');
-  background-size: cover; /* 设置背景图片尺寸 */
-  background-position: center; /* 设置背景图片位置 */
-  height: 100%;
-  width: 100%;
+  background-color: #FFF0F5;
 }
 </style>

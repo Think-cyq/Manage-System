@@ -3,7 +3,7 @@
     <div style="margin: 200px auto; background-color: #FFE4E1; width: 500px; height: 350px; padding: 20px; border-radius: 10px">
       <div style="margin: 10px 0; text-align: center; font-size: 24px; color: #FFC1C1; font-family: 'Comic Sans MS', Arial;"><b>❤login❤</b></div>
       <div style="text-align: center;">
-        <img src="../assets/logo4.gif" alt="Image" width="200px">
+        <img src="../assets/logo5.gif" alt="Image" width="200px">
       </div>
       <el-form :model="user" :rules="rules" ref="userForm">
         <el-form-item prop="username">
@@ -49,6 +49,7 @@ export default {
         if(valid){ //表单校验合法
           request.post("/user/login",this.user).then(res => {
             if(res.code === '200'){
+              localStorage.setItem("user",JSON.stringify(res.data)) //存储用户信息到浏览器
               this.$router.push("/")
               this.$message.success("login success!")
             }else{
