@@ -60,9 +60,16 @@ export default {
 
     var option = {
       title: {
-        text: 'Statistics on the number of members in each quarter',
+        text: 'The number of members in each quarter',
         subtext: 'trend chart',
         left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
       },
       xAxis: {
         type: 'category',
@@ -73,10 +80,12 @@ export default {
       },
       series: [
         {
+          name: "123",
           data: [],
           type: 'line'
         },
         {
+          name:"456",
           data:[],
           type: 'bar'
         }
@@ -87,7 +96,7 @@ export default {
     var pieOption = {
       title: {
         text: 'Statistics Graph',
-        subtext: 'trend chart',
+        subtext: 'pie chart',
         left: 'center',
       },
       tooltip: {
