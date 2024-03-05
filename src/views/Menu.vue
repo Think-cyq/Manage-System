@@ -2,15 +2,15 @@
   <div class="user-container">
 
     <div style="padding: 10px 0">
-      <el-input style="width: 300px"  placeholder="Please enter name" suffix-icon="el-icon-search" v-model="username"></el-input>
-      <el-input style="width: 300px" placeholder="please input your email" suffix-icon="el-icon-message" v-model="email"></el-input>
+      <el-input style="width: 300px; margin-left: 20px"  placeholder="Please enter name" suffix-icon="el-icon-search" v-model="name"></el-input>
+<!--      <el-input style="width: 300px" placeholder="please input your email" suffix-icon="el-icon-message" v-model="email"></el-input>
       <el-input style="width: 300px" placeholder="Please enter address" suffix-icon="el-icon-position" v-model="address"></el-input>
-      <el-button round class="ml-5" type="primary" @click="load">Search</el-button>
+      --><el-button round class="ml-5" type="primary" @click="load">Search</el-button>
       <el-button round class="ml-5" type="success" @click="reset">reset</el-button>
     </div>
 
     <div style="margin: 10px 0">
-      <el-button round type="primary" @click="handleAdd">add<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button round type="primary" @click="handleAdd(null)">add<i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='ensure'
@@ -22,23 +22,24 @@
       >
         <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
       </el-popconfirm>
-      <el-upload
+<!--      <el-upload
           action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
         <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
       </el-upload>
       <el-button round type="primary" @click="exp" class="ml-5">export<i class="el-icon-top"></i></el-button>
-    </div>
+    --></div>
 
-  <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange" :row-class-name="rowClass" >
+  <el-table :data="tableData" border stripe :header-cell-class-name="headerBg"
+            row-key="id" default-expand-all @selection-change="handleSelectionChange" :row-class-name="rowClass" >
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column prop="id" label="id" width="40" align="center"></el-table-column>
-    <el-table-column prop="username" label="username" width="140" align="center"></el-table-column>
-    <el-table-column prop="nickname" label="nickname" width="120" align="center"></el-table-column>
-    <el-table-column prop="email" label="email" align="center"></el-table-column>
-    <el-table-column prop="phone" label="phone" align="center"></el-table-column>
-    <el-table-column prop="address" label="address" align="center"></el-table-column>
-    <el-table-column label="operation" width="200" align="center">
+    <el-table-column prop="id" label="id" width="80" align="center"></el-table-column>
+    <el-table-column prop="name" label="name" align="center"></el-table-column>
+    <el-table-column prop="path" label="path" align="center"></el-table-column>
+    <el-table-column prop="icon" label="icon" align="center"></el-table-column>
+    <el-table-column prop="description" label="description" align="center"></el-table-column>
+    <el-table-column label="operation" width="280" align="center">
       <template slot-scope="scope">
+        <el-button round type="primary" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">addChildren<i class="el-icon-edit-plus"></i></el-button>
         <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
 
         <el-popconfirm
@@ -56,34 +57,20 @@
     </el-table-column>
 
   </el-table>
-  <div style="padding: 10px 0">
-    <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNum"
-        :page-sizes="[2, 5, 10, 20]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-    </el-pagination>
-  </div>
 
-  <el-dialog title="user info" :visible.sync="dialogFormVisible" wodth="30%" >
-    <el-form label-width="80px" size="small">
-      <el-form-item label="username">
-        <el-input v-model="form.username" autocomplete="off"></el-input>
+  <el-dialog title="Menu info" :visible.sync="dialogFormVisible" width="30%" style="text-align: center" >
+    <el-form label-width="100px" size="small">
+      <el-form-item label="name">
+        <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="nickname">
-        <el-input v-model="form.nickname" autocomplete="off"></el-input>
+      <el-form-item label="path">
+        <el-input v-model="form.path" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="email">
-        <el-input v-model="form.email" autocomplete="off"></el-input>
+      <el-form-item label="icon">
+        <el-input v-model="form.icon" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="phone">
-        <el-input v-model="form.phone" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="address">
-        <el-input v-model="form.address" autocomplete="off"></el-input>
+      <el-form-item label="description">
+        <el-input v-model="form.description" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -99,18 +86,16 @@
 import request from "@/utils/request";
 
 export default {
-  name: "User",
+  name: "Role",
   data() {
     return {
       tableData: [],
       total: 0,
       pageNum: 1,
       pageSize: 5,
+      name: "",
       username: "",
-      nickname:"",
-      avatar:"",
-      email:"",
-      address:"",
+      description:"",
       form:{},
       dialogFormVisible: false,
       multipleSelection: [],
@@ -121,43 +106,18 @@ export default {
   },
   methods: {
     load() {
-      request.get("/user/page", {
+      request.get("/menu", {
         params:{
-          pageNum: this.pageNum,
-          pageSize: this.pageSize,
-          username: this.username,
-
-          email: this.email,
-          address: this.address
+          name: this.name,
         }
       }).then(res => {
         // 检查响应中是否有 records 字段
-        if (res.data && Array.isArray(res.data.records)) {
-          this.tableData = res.data.records;
-          this.total = res.data.total;
-        }
-      }).catch(error => {
-        // 这里处理请求失败的情况，比如网络错误或者服务器返回的错误状态码
-        // 可以根据不同的 HTTP 状态码来显示不同的错误信息
-        if (error.response) {
-          if (error.response.status === 401) {
-            // token 验证失败的处理
-            this.$message.error("Token verification failed, please log in again.");
-            // 可能需要重定向到登录页面或显示登录对话框
-            // this.$router.push('/login');
-          } else {
-            // 其他类型的错误处理
-            this.$message.error("An error occurred: " + error.response.statusText);
-          }
-        } else {
-          // 处理没有响应的情况（例如网络错误）
-          this.$message.error("Network error or no response from server.");
-        }
-      });
+          this.tableData = res.data
+      })
     },
 
     save(){
-      request.post("/user",this.form).then(res => {
+      request.post("/menu",this.form).then(res => {
         if(res.code === '200'){
           this.$message.success("save success!")
           this.dialogFormVisible = false
@@ -167,14 +127,15 @@ export default {
         }
       })
     },
-    handleAdd(){
+    handleAdd(pid){
       this.dialogFormVisible = true
       this.form = {}
+      if(pid){
+        this.form.pid = pid
+      }
     },
     reset(){
-      this.username=""
-      this.email=""
-      this.address=""
+      this.name=""
       this.load()
     },
     handleEdit(row){
@@ -182,7 +143,7 @@ export default {
       this.dialogFormVisible = true
     },
     del(id){
-      request.delete("/user/" + id).then(res => {
+      request.delete("/menu/" + id).then(res => {
         if(res.code === '200'){
           this.$message.success("delete success!")
           this.load()
@@ -196,7 +157,7 @@ export default {
     },
     delBatch(){
       let ids = this.multipleSelection.map(v => v.id) //[{},{},{}] => [1,2,3]
-      request.post("/user/del/batch",ids).then(res => {
+      request.post("/menu/del/batch",ids).then(res => {
         if(res.code === '200'){
           this.$message.success("delete batch success!")
           this.load()
@@ -220,7 +181,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://localhost:9090/user/export")
+      window.open("http://localhost:9090/menu/export")
     },
     handleExcelImportSuccess(){
       this.$message.success("import success!")

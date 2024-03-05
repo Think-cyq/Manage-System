@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="10" style="margin-bottom: 40px">
+    <el-row :gutter="10" style="margin-bottom: 40px;color: #FFF0F5">
       <el-col :span="6">
         <el-card>
           <div style="color: lightpink;text-align: center">🌈Total number of users🌈</div>

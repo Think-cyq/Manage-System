@@ -13,6 +13,8 @@ const routes = [
     children:[
       { path: 'home', name: 'Home', component: () => import('../views/Home.vue')},
       { path: 'user', name: 'User', component: () => import('../views/User.vue')},
+      { path: 'role', name: 'Role', component: () => import('../views/Role.vue')},
+      { path: 'menu', name: 'Menu', component: () => import('../views/Menu.vue')},
       { path: 'person', name: 'Person', component: () => import('../views/Person.vue')},
       { path: 'file', name: 'File', component: () => import('../views/File.vue')},
     ]
