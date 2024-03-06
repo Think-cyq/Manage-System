@@ -36,7 +36,7 @@
     <el-table-column prop="description" label="description" align="center"></el-table-column>
     <el-table-column label="operation" align="center">
       <template slot-scope="scope">
-        <el-button round type="info" @click="selectMenu(scope.row.id)">Assignment Menu<i class="el-icon-menu"></i></el-button>
+        <el-button round type="info" @click="selectMenu(scope.row)">Assignment Menu<i class="el-icon-menu"></i></el-button>
         <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
 
         <el-popconfirm
@@ -107,7 +107,8 @@ export default {
       multipleSelection: [],
       menuData:[],
       props: {
-        label: 'name'
+        label: 'name',
+        disabled: 'disabled'
       },
       expends: [],
       checks: [],
@@ -152,6 +153,7 @@ export default {
           this.menuDialogVis = false
           // 操作管理员角色后需要重新登录
           if (this.roleFlag === 'ROLE_ADMIN') {
+            console.log(this.roleFlag)
             this.$store.commit("logout")
           }
 
@@ -209,16 +211,13 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
-    selectMenu(roleId){
+    async selectMenu(role){
       this.menuDialogVis = true
-      this.roleId = roleId
+      this.roleId = role.id
+      this.roleFlag = role.flag
 
       //请求菜单数据
-      request.get("/menu", {
-        params:{
-          name: this.name,
-        }
-      }).then(res => {
+      request.get("/menu").then(res => {
         // 检查响应中是否有 records 字段
         this.menuData = res.data
 
@@ -227,9 +226,16 @@ export default {
 
       })
 
-      request.get("/role/roleMenu/"+ roleId ).then(res => {
-          this.checks = res.data
-        console.log(res.data)
+      request.get("/role/roleMenu/"+ this.roleId ).then(res => {
+        //先渲染弹窗里面的元素
+        this.menuDialogVis = true
+
+        this.checks = res.data
+        this.ids.forEach(id => {
+          if(!this.checks.includes(id)){
+            this.$refs.tree.setChecked(id,false)
+          }
+        })
       })
     },
   }

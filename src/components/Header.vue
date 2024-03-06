@@ -58,8 +58,7 @@ export default {
       this.$emit('collapse');
     },
     logout(){
-      this.$router.push("/login")
-      localStorage.removeItem("user")
+      this.$store.commit("logout")
       this.$message.success("logout success!")
     }
   }
