@@ -72,14 +72,17 @@
         :data = "menuData"
         show-checkbox
         node-key="id"
-        :default-expanded-keys="[2, 3]"
-        :default-checked-keys="[5]"
-        @check-change="handleCheckChange">
+        ref="tree"
+        :default-expanded-keys="expends"
+        :default-checked-keys="checks">
+        <span class="custom-tree-node" slot-scope="{ node , data}">
+          <span><i :class="data.icon" ></i>{{ data.name }}</span>
+        </span>
     </el-tree>
 
     <div slot="footer" class="dialog-footer">
       <el-button @click="menuDialogVis = false">cancel</el-button>
-      <el-button type="primary" @click="save">ensure</el-button>
+      <el-button type="primary" @click="saveRoleMenu">ensure</el-button>
 
     </div>
   </el-dialog>
@@ -98,7 +101,6 @@ export default {
       pageNum: 1,
       pageSize: 5,
       name: "",
-      description:"",
       form:{},
       dialogFormVisible: false,
       menuDialogVis : false,
@@ -106,7 +108,12 @@ export default {
       menuData:[],
       props: {
         label: 'name'
-      }
+      },
+      expends: [],
+      checks: [],
+      roleId: 0,
+      roleFlag: '',
+      ids: []
     }
   },
   created() {
@@ -138,6 +145,20 @@ export default {
         }
       })
     },
+    saveRoleMenu(){
+      request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+        if (res.code === '200') {
+          this.$message.success("Binding success!")
+          this.menuDialogVis = false
+          // 操作管理员角色后需要重新登录
+          if (this.roleFlag === 'ROLE_ADMIN') {
+            this.$store.commit("logout")
+          }
+
+        } else {
+          this.$message.error(res.msg)
+        }
+      })    },
     handleAdd(){
       this.dialogFormVisible = true
       this.form = {}
@@ -190,6 +211,7 @@ export default {
     },
     selectMenu(roleId){
       this.menuDialogVis = true
+      this.roleId = roleId
 
       //请求菜单数据
       request.get("/menu", {
@@ -199,10 +221,16 @@ export default {
       }).then(res => {
         // 检查响应中是否有 records 字段
         this.menuData = res.data
+
+        //把后台返回的菜单数据处理成 id 数组
+        this.expends = this.menuData.map(v => v.id)
+
       })
-    },
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
+
+      request.get("/role/roleMenu/"+ roleId ).then(res => {
+          this.checks = res.data
+        console.log(res.data)
+      })
     },
   }
 }

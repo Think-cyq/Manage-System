@@ -33,6 +33,7 @@
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="id" label="id" width="40" align="center"></el-table-column>
     <el-table-column prop="username" label="username" width="140" align="center"></el-table-column>
+    <el-table-column prop="role" label="role" align="center"></el-table-column>
     <el-table-column prop="nickname" label="nickname" width="120" align="center"></el-table-column>
     <el-table-column prop="email" label="email" align="center"></el-table-column>
     <el-table-column prop="phone" label="phone" align="center"></el-table-column>
@@ -72,6 +73,11 @@
     <el-form label-width="80px" size="small">
       <el-form-item label="username">
         <el-input v-model="form.username" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="role">
+        <el-select clearable v-model="form.role" placeholder="please choose role" style="width: 100%">
+          <el-option v-for="item in roles" :key="item.name" :value="item.flag"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="nickname">
         <el-input v-model="form.nickname" autocomplete="off"></el-input>
@@ -114,6 +120,7 @@ export default {
       form:{},
       dialogFormVisible: false,
       multipleSelection: [],
+      roles: []
     }
   },
   created() {
@@ -153,7 +160,10 @@ export default {
           // 处理没有响应的情况（例如网络错误）
           this.$message.error("Network error or no response from server.");
         }
-      });
+      })
+      request.get("/role").then(res => {
+        this.roles = res.data
+      })
     },
 
     save(){

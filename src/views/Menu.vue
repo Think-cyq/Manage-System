@@ -35,7 +35,11 @@
     <el-table-column prop="id" label="id" width="80" align="center"></el-table-column>
     <el-table-column prop="name" label="name" align="center"></el-table-column>
     <el-table-column prop="path" label="path" align="center"></el-table-column>
-    <el-table-column prop="icon" label="icon" align="center"></el-table-column>
+    <el-table-column label="icon" class-name="fontSize18" align="center" label-class-name="fontSize12">
+      <template slot-scope="scope">
+        <i :class="scope.row.icon" />
+      </template>
+    </el-table-column>
     <el-table-column prop="description" label="description" align="center"></el-table-column>
     <el-table-column label="operation" width="280" align="center">
       <template slot-scope="scope">
@@ -67,7 +71,13 @@
         <el-input v-model="form.path" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="icon">
-        <el-input v-model="form.icon" autocomplete="off"></el-input>
+        <template slot-scope="scope">
+          <el-select clearable v-model="form.icon" placeholder="Please select" style="width: 100%">
+            <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.value">
+              <i :class="item.value" /> {{ item.name }}
+            </el-option>
+          </el-select>
+        </template>
       </el-form-item>
       <el-form-item label="description">
         <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -86,7 +96,7 @@
 import request from "@/utils/request";
 
 export default {
-  name: "Role",
+  name: "Menu",
   data() {
     return {
       tableData: [],
@@ -99,6 +109,7 @@ export default {
       form:{},
       dialogFormVisible: false,
       multipleSelection: [],
+      options: []
     }
   },
   created() {
@@ -141,6 +152,11 @@ export default {
     handleEdit(row){
       this.form = row
       this.dialogFormVisible = true
+
+      //请求图标的数据
+      request.get("/menu/icons").then(res => {
+        this.options = res.data
+      })
     },
     del(id){
       request.delete("/menu/" + id).then(res => {
@@ -200,6 +216,16 @@ export default {
 
 .table-row {
   background: #FFF0F5!important;
+}
+
+.fontSize18{
+  font-size: 18px;
+  color: aqua;
+}
+
+.fontSize12{
+  font-size: 12px;
+  color: #717f6d;
 }
 
 .user-container {
