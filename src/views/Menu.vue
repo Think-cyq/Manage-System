@@ -35,6 +35,7 @@
     <el-table-column prop="id" label="id" width="80" align="center"></el-table-column>
     <el-table-column prop="name" label="name" align="center"></el-table-column>
     <el-table-column prop="path" label="path" align="center"></el-table-column>
+    <el-table-column prop="pagePath" label="pagePath" align="center"></el-table-column>
     <el-table-column label="icon" class-name="fontSize18" align="center" label-class-name="fontSize12">
       <template slot-scope="scope">
         <i :class="scope.row.icon" />
@@ -69,6 +70,9 @@
       </el-form-item>
       <el-form-item label="path">
         <el-input v-model="form.path" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="pagePath">
+        <el-input v-model="form.pagePath" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="icon">
         <template slot-scope="scope">

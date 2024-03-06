@@ -25,6 +25,7 @@
 import request from "@/utils/request";
 <script>
 import request from "@/utils/request";
+import {setRoutes} from "@/router";
 
 export default {
   name: "Login",
@@ -50,6 +51,10 @@ export default {
           request.post("/user/login",this.user).then(res => {
             if(res.code === '200'){
               localStorage.setItem("user",JSON.stringify(res.data)) //存储用户信息到浏览器
+              localStorage.setItem("menus",JSON.stringify(res.data.menus)) //存储用户信息到浏览器
+
+              //动态设置当前用户的路由
+              setRoutes()
               this.$router.push("/")
               this.$message.success("login success!")
             }else{

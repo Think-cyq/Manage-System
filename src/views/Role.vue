@@ -146,7 +146,7 @@ export default {
       })
     },
     saveRoleMenu(){
-      request.post("/role/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+      request.post("/role/roleMenu/" + this.roleId,this.$refs.tree.getCheckedKeys()).then(res => {
         if (res.code === '200') {
           this.$message.success("Binding success!")
           this.menuDialogVis = false
