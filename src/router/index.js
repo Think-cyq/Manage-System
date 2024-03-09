@@ -28,6 +28,15 @@ const router = new VueRouter({
   routes
 })
 
+//提供一个设置路由的方法
+export const resetRouter = () => {
+  router.matcher = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
+  })
+}
+
 // 注意：刷新页面会导致页面路由重置
 export const setRoutes = () => {
   const storeMenus = localStorage.getItem("menus");
