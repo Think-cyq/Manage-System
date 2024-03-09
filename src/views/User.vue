@@ -42,14 +42,15 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="nickname" label="nickname" width="120" align="center"></el-table-column>
+    <el-table-column prop="nickname" label="nickname" width="120" align="center" ></el-table-column>
     <el-table-column prop="email" label="email" align="center"></el-table-column>
     <el-table-column prop="phone" label="phone" align="center"></el-table-column>
     <el-table-column prop="address" label="address" align="center"></el-table-column>
-    <el-table-column label="operation" width="300" align="center">
+    <el-table-column label="operation" width="450" align="center">
       <template slot-scope="scope">
-        <el-button round type="success" @click="checkCourse(scope.row.courses)" v-if="scope.row.role === 'ROLE_TEACHER'">Check Course<i class="el-icon-edit-document"></i></el-button>
-        <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
+        <el-button round type="success" @click="checkCourse(scope.row.courses)" v-if="scope.row.role === 'ROLE_TEACHER'">Check Taught<i class="el-icon-edit-document"></i></el-button>
+        <el-button round type="warning" @click="checkStuCourse(scope.row.stuCourses)" v-if="scope.row.role === 'ROLE_STUDENT'">Check Selected<i class="el-icon-edit-document"></i></el-button>
+        <el-button round type="primary" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
 
         <el-popconfirm
             class="ml-5"
@@ -107,12 +108,19 @@
     </div>
   </el-dialog>
 
-  <el-dialog title="course info" :visible.sync="dialogFormVisible" width="30%">
+  <el-dialog title="course info" :visible.sync="vis" width="30%">
     <el-table :data="courses">
       <el-table-column prop="name" label="courseName"></el-table-column>
       <el-table-column prop="score" label="score"></el-table-column>
     </el-table>
   </el-dialog>
+
+    <el-dialog title="course info" :visible.sync="vis" width="30%">
+      <el-table :data="courses">
+        <el-table-column prop="name" label="courseName"></el-table-column>
+        <el-table-column prop="score" label="score"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,7 +144,10 @@ export default {
       dialogFormVisible: false,
       multipleSelection: [],
       roles: [],
-      courses:[]
+      courses:[],
+      vis: false,
+      stuVis:false,
+      stuCourses: false
     }
   },
   created() {
@@ -255,6 +266,10 @@ export default {
     checkCourse(courses){
       this.courses = courses
       this.vis = true
+    },
+    checkStuCourse(stuCourses){
+      this.courses = stuCourses
+      this.stuVis = true
     }
   }
 }

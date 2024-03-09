@@ -6,7 +6,7 @@
       <el-button type="warning" @click="reset">reset</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-button round type="primary" @click="handleAdd">add<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button round type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'">add<i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='ensure'
@@ -28,16 +28,15 @@
       <el-table-column prop="times" label="times" align="center"></el-table-column>
       <el-table-column prop="teacher" label="teacher" align="center"></el-table-column>
 
-
-
       <el-table-column  label="enable">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="#ccc"
                       @change="changeEnable(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="operation" width="200" align="center">
+      <el-table-column label="operation" width="300" align="center">
         <template slot-scope="scope">
+          <el-button type="success" @click="selectCourse(scope.row.id)">Select Class</el-button>
           <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
           <el-popconfirm
               class="ml-5"
@@ -48,7 +47,7 @@
               title="Are you sure?"
               @confirm="del(scope.row.id)"
           >
-            <el-button round type="warning" slot="reference">delete<i class="el-icon-delete"></i></el-button>
+            <el-button round type="warning" slot="reference" v-if="user.role === 'ROLE_ADMIN'">delete<i class="el-icon-delete"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -68,7 +67,7 @@
     </div>
 
 
-  <el-dialog title="课程信息" :visible.sync="dialogFormVisible" width="30%" >
+  <el-dialog title="Course info" :visible.sync="dialogFormVisible" width="30%" >
     <el-form label-width="80px" size="small">
       <el-form-item label="name">
         <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -86,8 +85,8 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button @click="dialogFormVisible = false">cancel</el-button>
+      <el-button type="primary" @click="save">ensure</el-button>
     </div>
   </el-dialog>
   </div>
@@ -235,6 +234,15 @@ export default {
     download(url){
       window.open(url)
     },
+    selectCourse(courseId){
+      request.post('/course/studentCourse/' + courseId + "/"+ this.user.id).then(res => {
+        if(res.code === '200'){
+          this.$message.success("Select Course success!")
+        }else{
+          this.$message.success(res.msg)
+        }
+      })
+    }
   }
 }
 </script>
