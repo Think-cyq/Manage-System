@@ -32,8 +32,9 @@
   <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange" :row-class-name="rowClass" >
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="id" label="id" width="80" align="center"></el-table-column>
-    <el-table-column prop="name" label="RoleName" align="center"></el-table-column>
-    <el-table-column prop="description" label="description" align="center"></el-table-column>
+    <el-table-column prop="name" label="RoleName" align="center" width="200px"></el-table-column>
+    <el-table-column prop="flag" label="key-flag" align="center" width="200px"></el-table-column>
+    <el-table-column prop="description" label="description" align="center" width="200px"></el-table-column>
     <el-table-column label="operation" align="center">
       <template slot-scope="scope">
         <el-button round type="info" @click="selectMenu(scope.row)">Assignment Menu<i class="el-icon-menu"></i></el-button>
@@ -66,7 +67,25 @@
     </el-pagination>
   </div>
 
-  <el-dialog title="Menu Assignment" :visible.sync="menuDialogVis" width="30%" style="text-align: center" >
+    <el-dialog title="角色信息" :visible.sync="dialogFormVisible" width="30%" >
+      <el-form label-width="80px" size="small">
+        <el-form-item label="名称">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="唯一标识">
+          <el-input v-model="form.flag" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="form.description" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">cancel</el-button>
+        <el-button type="primary" @click="save">ensure</el-button>
+      </div>
+    </el-dialog>
+
+  <el-dialog title="menu Assignment" :visible.sync="menuDialogVis" width="30%" style="text-align: center" >
     <el-tree
         :props="props"
         :data = "menuData"
@@ -150,7 +169,7 @@ export default {
       request.post("/role/roleMenu/" + this.roleId,this.$refs.tree.getCheckedKeys()).then(res => {
         if (res.code === '200') {
           this.$message.success("Binding success!")
-          this.menuDialogVis = false
+          this.dialogFormVisible = false
           // 操作管理员角色后需要重新登录
           if (this.roleFlag === 'ROLE_ADMIN') {
             console.log(this.roleFlag)
@@ -169,8 +188,10 @@ export default {
       this.name=""
       this.load()
     },
+
     handleEdit(row){
-      this.form = row
+      console.log(row)
+      this.form = JSON.parse(JSON.stringify(row))
       this.dialogFormVisible = true
     },
     del(id){

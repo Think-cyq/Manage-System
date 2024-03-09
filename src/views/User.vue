@@ -33,13 +33,22 @@
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="id" label="id" width="40" align="center"></el-table-column>
     <el-table-column prop="username" label="username" width="140" align="center"></el-table-column>
-    <el-table-column prop="role" label="role" align="center"></el-table-column>
+    <el-table-column prop="role" label="role" align="center">
+      <template slot-scope="scope">
+        <el-tag type="primary" v-if="scope.row.role === 'ROLE_ADMIN'">admin</el-tag>
+        <el-tag type="warning" v-if="scope.row.role === 'ROLE_TEACHER'">teacher</el-tag>
+        <el-tag type="success" v-if="scope.row.role === 'ROLE_STUDENT'">student</el-tag>
+
+      </template>
+    </el-table-column>
+
     <el-table-column prop="nickname" label="nickname" width="120" align="center"></el-table-column>
     <el-table-column prop="email" label="email" align="center"></el-table-column>
     <el-table-column prop="phone" label="phone" align="center"></el-table-column>
     <el-table-column prop="address" label="address" align="center"></el-table-column>
-    <el-table-column label="operation" width="200" align="center">
+    <el-table-column label="operation" width="300" align="center">
       <template slot-scope="scope">
+        <el-button round type="success" @click="checkCourse(scope.row.courses)" v-if="scope.row.role === 'ROLE_TEACHER'">Check Course<i class="el-icon-edit-document"></i></el-button>
         <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
 
         <el-popconfirm
@@ -95,8 +104,14 @@
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">cancel</el-button>
       <el-button type="primary" @click="save">ensure</el-button>
-
     </div>
+  </el-dialog>
+
+  <el-dialog title="course info" :visible.sync="dialogFormVisible" width="30%">
+    <el-table :data="courses">
+      <el-table-column prop="name" label="courseName"></el-table-column>
+      <el-table-column prop="score" label="score"></el-table-column>
+    </el-table>
   </el-dialog>
   </div>
 </template>
@@ -120,7 +135,8 @@ export default {
       form:{},
       dialogFormVisible: false,
       multipleSelection: [],
-      roles: []
+      roles: [],
+      courses:[]
     }
   },
   created() {
@@ -235,6 +251,10 @@ export default {
     handleExcelImportSuccess(){
       this.$message.success("import success!")
       this.load()
+    },
+    checkCourse(courses){
+      this.courses = courses
+      this.vis = true
     }
   }
 }

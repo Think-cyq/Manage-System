@@ -64,7 +64,7 @@ export default {
       request.post("/user",this.form).then(res => {
         if(res.code === '200'){
           this.$message.success("save success!")
-
+          console.log("我启动了")
           //触发父级更新用户的方法
           this.$emit("refreshUser")
 

@@ -42,6 +42,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="description" label="description" align="center"></el-table-column>
+    <el-table-column prop="sortNum" label="sortNum"></el-table-column>
     <el-table-column label="operation" width="280" align="center">
       <template slot-scope="scope">
         <el-button round type="primary" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">addChildren<i class="el-icon-edit-plus"></i></el-button>
@@ -82,6 +83,9 @@
             </el-option>
           </el-select>
         </template>
+      </el-form-item>
+      <el-form-item label="顺序">
+        <el-input v-model="form.sortNum" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="description">
         <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -127,6 +131,7 @@ export default {
         }
       }).then(res => {
         // 检查响应中是否有 records 字段
+        console.log(res)
           this.tableData = res.data
       })
     },
