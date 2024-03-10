@@ -165,6 +165,7 @@ export default {
       //请求图标的数据
       request.get("/menu/icons").then(res => {
         this.options = res.data
+        console.log(this.options)
       })
     },
     del(id){

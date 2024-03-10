@@ -6,12 +6,14 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/global.css'
 import request from "@/utils/request";
-/*import html from './assets/404.html';*/
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI,{size: "small"});
 
 Vue.prototype.axios = request
+Vue.use(mavonEditor)
 
 new Vue({
   router,

@@ -1,165 +1,147 @@
 <template>
-  <div>
-    <el-row :gutter="10" style="margin-bottom: 40px;color: #FFF0F5">
-      <el-col :span="6">
-        <el-card>
-          <div style="color: lightpink;text-align: center">🌈Total number of users🌈</div>
-          <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card>
-         <div style="color: lightpink; text-align: center">🧸Total sales🧸</div>
-          <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card>
-          <div style="color: lightpink;text-align: center">🍬Total proceeds🍬</div>
-          <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card>
-          <div style="color: lightpink">💝Total number of stores💝</div>
-          <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <div id = 'main' style="width: 500px; height: 400px"></div>
-      </el-col>
-
-      <el-col :span="12">
-        <div id = 'pie' style="width: 500px; height: 400px"></div>
-      </el-col>
-    </el-row>
+  <div class="my-element">
+    welcome
+    <div class="card">
+      <p class="time-text">
+        <span>{{ currentTime.hours }}</span>:<span>{{ currentTime.minutes }}</span>
+        <span class="time-sub-text">{{ currentTime.period }}</span>
+      </p>
+      <p class="day-text">{{ currentDate }}</p>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16" stroke-width="0" fill="currentColor" stroke="currentColor" class="moon"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path><path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path></svg>
+    </div>
   </div>
 </template>
 
 <script>
-import * as echarts from 'echarts'
-import request from "@/utils/request";
-export default {
-  name: "Home",
-  data(){
+import 'animate.css';
+import Data from "./Data.vue";
+export default{
+  name: 'Home',
+  components: {
+    Data
+  },
+  data() {
     return {
+      currentTime: {
+        hours: '',
+        minutes: '',
+        period: ''
+      },
+      currentDate: ''
+    };
+  },
+  methods: {
+    updateDateTime() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const isAm = hours < 12;
 
+      // Format hours for 12-hour format
+      hours = hours % 12 || 12;
+
+      // Update the currentTime data property
+      this.currentTime = {
+        hours: hours.toString(),
+        minutes: minutes < 10 ? '0' + minutes.toString() : minutes.toString(),
+        period: isAm ? 'AM' : 'PM'
+      };
+
+      // Update the currentDate data property
+      this.currentDate = this.formatDate(now);
+    },
+    formatDate(date) {
+      const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const dayName = dayNames[date.getDay()];
+      const monthName = monthNames[date.getMonth()];
+      const day = date.getDate();
+      const year = date.getFullYear();
+      const ordinal = this.getOrdinalIndicator(day);
+
+      return `${dayName}, ${monthName} ${day}${ordinal} ${year}`;
+    },
+    getOrdinalIndicator(day) {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
     }
   },
-  mounted() {  //页面元素渲染之后再触发
-
-    var option = {
-      title: {
-        text: 'The number of members in each quarter',
-        subtext: 'trend chart',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left'
-      },
-      xAxis: {
-        type: 'category',
-        data: ["第一季度","第二季度","第三季度","第四季度"]
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          name: "123",
-          data: [],
-          type: 'line'
-        },
-        {
-          name:"456",
-          data:[],
-          type: 'bar'
-        }
-      ]
-    };
-
-    //饼图
-    var pieOption = {
-      title: {
-        text: 'Statistics Graph',
-        subtext: 'pie chart',
-        left: 'center',
-      },
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left'
-      },
-      series: [
-        {
-          type: 'pie',
-          radius: '50%',
-          label: {
-            show:true,
-            position:'inner',
-            textStyle : {
-              fontWeight : 300,
-              fontSize : 16, //文字的字体大小
-              color: "#fff"
-            },
-            formatter: '{d}%'
-          },
-          center:['50%','60%'],
-          data: [],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(236,160,160,0.5)'
-            }
-          }
-        }
-      ]
-    };
-
-    var chartDom = document.getElementById('main');
-    var myChart = echarts.init(chartDom);
-
-    var pieDom = document.getElementById('pie');
-    var pieChart = echarts.init(pieDom);
-    request.get("/echarts/members").then(res => {
-      //填空
-      /*option.xAxis.data = res.data.x*/
-      option.series[0].data = res.data
-      option.series[1].data = res.data
-      //在数据准备完毕之后再set
-      myChart.setOption(option)
-
-      pieOption.series[0].data = [
-        {name: "第一季度" ,value:res.data[0]},
-        {name: "第二季度" ,value:res.data[1]},
-        {name: "第三季度" ,value:res.data[2]},
-        {name: "第四季度" ,value:res.data[3]},
-      ]
-      pieChart.setOption(pieOption)
-    })
-
-    pieChart.setOption(pieOption);
+  mounted() {
+    this.updateDateTime(); // Update on initial mount
+    setInterval(this.updateDateTime, 60000); // Update every minute
   }
+
+
+// 每分钟更新时间
 }
 </script>
 
-<style scoped>
+<style>
+.my-element {
+  display: inline-block;
+  margin: 0 0.5rem;
+
+  animation: bounce; /* referring directly to the animation's @keyframe declaration */
+  animation-duration: 2s; /* don't forget to set a duration! */
+}
+
+.card {
+  width: 280px;
+  height: 150px;
+  background: rgba(236, 160, 160, 0.2);
+  border-radius: 15px;
+  box-shadow: rgba(74, 47, 99, 0.4) 5px 10px 50px , rgba(72, 47, 99, 0.28) -5px 0px 250px;
+  display: flex;
+  color: white;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+  background: linear-gradient(to right, rgba(236, 160, 160, 0.2), rgba(236, 160, 160, 0.5));
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: rgba(236, 160, 160, 0.2) 5px 10px 50px , rgb(236, 160, 160) -5px 0px 250px;
+}
+
+.time-text {
+  font-size: 50px;
+  margin-top: 0px;
+  margin-left: 15px;
+  font-weight: 600;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.time-sub-text {
+  font-size: 15px;
+  margin-left: 5px;
+}
+
+.day-text {
+  font-size: 18px;
+  margin-top: 0px;
+  margin-left: 15px;
+  font-weight: 500;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.moon {
+  font-size: 20px;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover > .moon {
+  font-size: 23px;
+}
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="component-container" style="color: #FFE4E1">
+  <div  style="color: #FFE4E1">
     <div style="font-size: 12px;line-height: 60px; display: flex; color: #FFC1C1">
       <div style="flex: 1">
         <span :class="collapseBtnClass" style="cursor: pointer;font-size: 20px" @click="SonCollapse"></span>

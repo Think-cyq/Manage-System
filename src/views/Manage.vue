@@ -2,18 +2,18 @@
 <template>
     <el-container style="min-height: 100vh">
 
-      <el-aside :width="sideWidth + 'px'" style="background-color: rgb(230 230 250)">
+      <el-aside :width="sideWidth + 'px'" style="background-color: rgba(236,160,160,0.2)">
         <Aside :is-collapse="isCollapse"/>
       </el-aside>
 
-      <el-container>
+      <el-container style="background-color: rgba(236,160,160,0.2)">
         <el-header style=" border-bottom: 1px solid #ccc">
           <Header :collapse-btn-class="collapseBtnClass" @collapse="collapse" :user="user"/>
         </el-header>
 
-        <el-main>
+        <el-main class="page">
 <!--表示当前页面的子路由会在<router-view/>里面展示-->
-          <router-view @refreshUser="getUser" />
+            <router-view @refreshUser="getUser" />
         </el-main>
       </el-container>
     </el-container>
@@ -68,4 +68,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.page{
+  background-image: url("../assets/logo2.gif");
+  background-color: #FFF0F5;
+  background-size: cover; /* 设置背景图片尺寸 */
+  background-position: center; /* 设置背景图片位置 */
+  height: 100%;
+}
+</style>
 

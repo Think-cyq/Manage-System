@@ -1,6 +1,5 @@
 <template>
-  <div class="user-container">
-
+  <div>
     <div style="padding: 10px 0">
       <el-input style="width: 300px"  placeholder="Please enter name" suffix-icon="el-icon-search" v-model="username"></el-input>
       <el-input style="width: 300px" placeholder="please input your email" suffix-icon="el-icon-message" v-model="email"></el-input>
@@ -108,15 +107,15 @@
     </div>
   </el-dialog>
 
-  <el-dialog title="course info" :visible.sync="vis" width="30%">
+  <el-dialog title="taught_course info" :visible.sync="vis" width="30%">
     <el-table :data="courses">
       <el-table-column prop="name" label="courseName"></el-table-column>
       <el-table-column prop="score" label="score"></el-table-column>
     </el-table>
   </el-dialog>
 
-    <el-dialog title="course info" :visible.sync="vis" width="30%">
-      <el-table :data="courses">
+    <el-dialog title="selected_course info" :visible.sync="stuVis" width="30%">
+      <el-table :data="stuCourses" border stripe>
         <el-table-column prop="name" label="courseName"></el-table-column>
         <el-table-column prop="score" label="score"></el-table-column>
       </el-table>
@@ -268,7 +267,8 @@ export default {
       this.vis = true
     },
     checkStuCourse(stuCourses){
-      this.courses = stuCourses
+      console.log(stuCourses)
+      this.stuCourses = stuCourses
       this.stuVis = true
     }
   }
@@ -286,12 +286,4 @@ export default {
   background: #FFF0F5!important;
 }
 
-.user-container {
-  /* 设置背景图片路径和属性 */
-  background-image: url("../assets/logo2.gif");
-  background-color: #FFF0F5;
-  background-size: cover; /* 设置背景图片尺寸 */
-  background-position: center; /* 设置背景图片位置 */
-  height: 100%;
-}
 </style>
