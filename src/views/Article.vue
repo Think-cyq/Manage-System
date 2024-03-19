@@ -23,11 +23,14 @@
     <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange" :row-class-name="rowClass" >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
-      <el-table-column prop="name" label="Passage Title" width="140" align="center"></el-table-column>
-      <el-table-column prop="content" label="Passage Content" width="120" align="center"></el-table-column>
-      <el-table-column prop="times" label="user" align="publisher"></el-table-column>
-      <el-table-column prop="teacher" label="time" align="Public Time"></el-table-column>
-
+      <el-table-column prop="name" label="Passage Title" width="200" align="center"></el-table-column>
+      <el-table-column prop="content" label="Passage Content" width="200" align="center">
+        <template slot-scope="scope">
+          <el-button @click="view(scope.row.content)" type="primary">查看内容</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column prop="user" label="user" align="center"></el-table-column>
+      <el-table-column prop="time" label="time" align="center"></el-table-column>
       <el-table-column label="operation" width="300" align="center">
         <template slot-scope="scope">
           <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
@@ -74,6 +77,24 @@
       <el-button type="primary" @click="save">ensure</el-button>
     </div>
   </el-dialog>
+    <el-dialog title="文章信息" :visible.sync="viewDialogVis" width="60%">
+      <el-card>
+        <div>
+          <mavon-editor
+              class="md"
+              :value="content"
+              :subfield="false"
+              :defaultOpen="'preview'"
+              :toolbarsFlag="false"
+              :editable="false"
+              :scrollStyle="true"
+              :ishljs="true"
+          />
+        </div>
+      </el-card>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -95,14 +116,20 @@ export default {
       dialogFormVisible: false,
       form:{},
       teachers: [],
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      content:'',
+      viewDialogVis: false,
     }
   },
   created() {
     this.load()
   },
   methods: {
-    imgAdd(pos,$file){
+    view(content){
+      this.content = content
+      this.viewDialogVis = true
+    },
+      imgAdd(pos,$file){
       let $vm = this.$ref.md
       //第一步，图片上传到服务器
       const formData = new FormData();

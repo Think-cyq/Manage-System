@@ -27,16 +27,23 @@
       <el-table-column prop="score" label="score" width="120" align="center"></el-table-column>
       <el-table-column prop="times" label="times" align="center"></el-table-column>
       <el-table-column prop="teacher" label="teacher" align="center"></el-table-column>
-
-      <el-table-column  label="enable">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="#ccc"
-                      @change="changeEnable(scope.row)"></el-switch>
-        </template>
+      <el-table-column label="like_num" align="center">
+          <template slot-scope="scope">
+            <el-button
+                type="warning"
+                icon="el-icon-star-off"
+                @click="Add_num(scope.row.id)"
+                circle>
+            </el-button>
+          </template>
       </el-table-column>
+
+
+
+
       <el-table-column label="operation" width="300" align="center">
         <template slot-scope="scope">
-          <el-button type="success" @click="selectCourse(scope.row.id)">Select Class</el-button>
+
           <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
           <el-popconfirm
               class="ml-5"
@@ -48,6 +55,7 @@
               @confirm="del(scope.row.id)"
           >
             <el-button round type="warning" slot="reference" v-if="user.role === 'ROLE_ADMIN'">delete<i class="el-icon-delete"></i></el-button>
+            <el-button type="warning" icon="el-icon-star-off" circle>fff</el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -109,6 +117,7 @@ export default {
       dialogFormVisible: false,
       form:{},
       teachers: [],
+      like_num: 0,
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
   },
@@ -122,7 +131,6 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           name: this.name,
-
         }
       }).then(res => {
         // 检查响应中是否有 records 字段
@@ -155,6 +163,18 @@ export default {
         console.log(res)
       })
     },
+    Add_num(courseId){
+      request.post(`/course/like`,{
+          like_num:this.like_num++,
+          courseId: courseId
+      }).then(res =>{
+        if(res.code === '200') {
+          this.$message.success("save success")
+        }else{
+          this.$message.error("save wrong")
+        }
+      })
+    },
 
     save(){
       request.post("/course",this.form).then(res => {
@@ -179,13 +199,6 @@ export default {
       this.dialogFormVisible = true
     },
 
-    changeEnable(row){
-      request.post("/course/update",row).then(res => {
-        if(res.code === '200') {
-          this.$message.success("operation successfully!")
-        }
-      })
-    },
     reset(){
       this.name=""
       this.load()

@@ -5,21 +5,21 @@
         <el-card>
           <div style="color: lightpink;text-align: center">🌈Total number of users🌈</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
+            {{this.total}}
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink; text-align: center">🧸Total sales🧸</div>
+          <div style="color: lightpink; text-align: center">🧸Total courses🧸</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
+            {{ this.course_total }}
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink;text-align: center">🍬Total proceeds🍬</div>
+          <div style="color: lightpink;text-align: center">🍬popular teacher🍬</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
             100
           </div>
@@ -53,11 +53,14 @@ export default {
   name: "Home",
   data(){
     return {
-
+      total: 0,
+      course_total: 0,
+      pageNum:0,
+      pageSize:0,
+      name: ''
     }
   },
   mounted() {  //页面元素渲染之后再触发
-
     var option = {
       title: {
         text: 'The number of members in each quarter',
@@ -143,6 +146,22 @@ export default {
       /*option.xAxis.data = res.data.x*/
       option.series[0].data = res.data
       option.series[1].data = res.data
+      this.total = res.data.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, 0);
+      request.get("/course/page", {
+        params:{
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          name: this.name,
+
+        }
+      }).then(res =>{
+          this.course_total = res.data.total;
+      }).catch(error => {
+        console.error("Error fetching data:", error);
+        // 处理错误
+      });
       //在数据准备完毕之后再set
       myChart.setOption(option)
 

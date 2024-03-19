@@ -17,6 +17,7 @@
           <span>{{ user.nickname }}</span><i class="el-icon-arrow-down" style=" margin-left: 5px"></i>
         </div>
 
+
         <el-dropdown-menu slot="dropdown" style="width: 100px; text-align: center">
           <el-dropdown-item style="font-size: 14px; padding: 5px 0">
             <router-link to="/person">self-info</router-link>
@@ -25,7 +26,12 @@
           <el-dropdown-item style="font-size: 14px; padding: 5px 0">
             <span style="text-decoration: #FFC1C1" @click="logout">logout</span>
           </el-dropdown-item>
+
+          <el-dropdown-item style="font-size: 14px; padding: 5px 0">
+            <router-link to="/password">password</router-link>
+          </el-dropdown-item>
         </el-dropdown-menu>
+
       </el-dropdown>
     </div>
   </div>

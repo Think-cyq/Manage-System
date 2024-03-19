@@ -18,11 +18,19 @@
         <el-form-item prop="confirmPassword">
           <el-input placeholder="ensure your password" size="medium" prefix-icon="el-icon-lock" show-password v-model="user.confirmPassword"></el-input>
         </el-form-item>
+
+        <el-form-item>
+          <el-select clearable v-model="user.role" placeholder="please choose role" style="width: 100%">
+            <el-option v-for="item in roles" :key="item.name" :value="item.flag"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item style="margin: 10px 0; text-align: center">
           <el-button type="success" size="small" autocomplete="off" @click="login">register</el-button>
           <el-button type="warning" size="small" autocomplete="off"@click="$router.push('/login')">return login</el-button>
         </el-form-item>
       </el-form>
+
 
     </div>
   </div>
@@ -54,10 +62,32 @@ export default {
           { required: true, message: 'Please enter password', trigger:'blur'},
           { min: 6, max:20, message: 'length between 6 and 20', trigger: 'blur'}
         ],
-      }
+      },
+      roles:[],
     }
   },
+  created() {
+    this.load()
+  },
   methods: {
+    load(){
+      request.get("/role").then(res => {
+        console.log(res)
+        this.roles = res.data
+      })
+    },
+    save(){
+      request.post("/user",this.form).then(res => {
+        if(res.code === '200'){
+
+          this.$message.success("save success!")
+          this.dialogFormVisible = false
+          this.load()
+        } else{
+          this.$message.error("save wrong!")
+        }
+      })
+    },
     login(){
       this.$refs['userForm'].validate((valid) => {
         if(valid){ //表单校验合法
@@ -67,6 +97,7 @@ export default {
           }
           request.post("/user/register",this.user).then(res => {
             if(res.code === '200'){
+              console.log(this.user)
               this.$message.success("register success!")
             }else{
               this.$message.error(res.msg)
