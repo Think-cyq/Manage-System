@@ -102,6 +102,7 @@
 
 <script>
 import request from "@/utils/request";
+import {serverIp} from "../../public/config";
 
 export default {
   name: "Menu",
@@ -207,7 +208,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://localhost:9090/menu/export")
+      window.open(`http://${serverIp}:9090/menu/export`)
     },
     handleExcelImportSuccess(){
       this.$message.success("import success!")

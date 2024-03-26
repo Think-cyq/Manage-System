@@ -7,7 +7,7 @@
     </div>
     <div style="margin: 10px 0">
       <el-upload
-        action="http://localhost:9090/file/upload" :show-file-list="false"  :on-success="handleFileUploadSuccess" style="display: inline-block">
+          :action="'https://' + serverIp + ':9090/file/upload'" :show-file-list="false" :on-success="handleFileUploadSuccess" style="display: inline-block">
       <el-button round type="primary" class="ml-5">upload files<i class="el-icon-bottom"></i></el-button>
       </el-upload>
 
@@ -83,11 +83,13 @@
 
 <script>
 import request from "@/utils/request";
+import {serverIp} from "../../public/config";
 
 export default {
   name: "File.vue",
   data(){
     return{
+      serverIp: serverIp,
       tableData: [],
       name:'',
       multipleSelection: [],
@@ -188,9 +190,9 @@ export default {
     download(url){
       window.open(url)
     },
-    preview(url){
-      window.open()
-    }
+    preview(url) {
+      window.open('https://file.keking.cn/onlinePreview?url=' + encodeURIComponent(window.btoa((url))))
+    },
   }
 }
 </script>

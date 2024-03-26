@@ -22,7 +22,7 @@
         <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
       </el-popconfirm>
       <el-upload
-          action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+          :action="'http://' + serverIp + ':9090/user/import'" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
         <el-button round type="primary" class="ml-5">import<i class="el-icon-bottom"></i></el-button>
       </el-upload>
       <el-button round type="primary" @click="exp" class="ml-5">export<i class="el-icon-top"></i></el-button>
@@ -125,11 +125,13 @@
 
 <script>
 import request from "@/utils/request";
+import {serverIp} from "../../public/config";
 
 export default {
   name: "User",
   data() {
     return {
+      serverIp: serverIp,
       tableData: [],
       total: 0,
       pageNum: 1,
@@ -256,7 +258,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://localhost:9090/user/export")
+      window.open(`http://${serverIp}:9090/user/export`)
     },
     handleExcelImportSuccess(){
       this.$message.success("import success!")

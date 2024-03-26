@@ -43,7 +43,7 @@
 
       <el-table-column label="operation" width="300" align="center">
         <template slot-scope="scope">
-
+          <el-button type="primary" @click="selectCourse(scope.row.id)">选课</el-button>
           <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
           <el-popconfirm
               class="ml-5"

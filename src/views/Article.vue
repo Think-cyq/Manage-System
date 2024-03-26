@@ -2,11 +2,11 @@
   <div>
     <div style="margin: 10px 0">
       <el-input style="width: 200px" placeholder="enter name" suffix-icon="el-icon-search" v-model="name"></el-input>
-      <el-button class="ml-5" type="primary" @click="load">search</el-button>
-      <el-button type="warning" @click="reset">reset</el-button>
+      <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
+      <el-button type="warning" @click="reset">重置</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-button round type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'">add<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button round type="primary" @click="handleAdd" v-if="user.role === 'ROLE_ADMIN'">添加<i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='ensure'
@@ -16,7 +16,7 @@
           title="Are you sure?"
           @confirm="delBatch"
       >
-        <el-button round type="danger" slot="reference" >deleteBatch<i class="el-icon-delete"></i></el-button>
+        <el-button round type="danger" slot="reference" >批量删除<i class="el-icon-delete"></i></el-button>
       </el-popconfirm>
 
     </div>
@@ -33,7 +33,7 @@
       <el-table-column prop="time" label="time" align="center"></el-table-column>
       <el-table-column label="operation" width="300" align="center">
         <template slot-scope="scope">
-          <el-button round type="success" @click="handleEdit(scope.row)">edit<i class="el-icon-edit-outline"></i></el-button>
+          <el-button round type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit-outline"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='ensure'
@@ -43,7 +43,7 @@
               title="Are you sure?"
               @confirm="del(scope.row.id)"
           >
-            <el-button round type="warning" slot="reference" v-if="user.role === 'ROLE_ADMIN'">delete<i class="el-icon-delete"></i></el-button>
+            <el-button round type="warning" slot="reference" v-if="user.role === 'ROLE_ADMIN'">删除<i class="el-icon-delete"></i></el-button>
           </el-popconfirm>
         </template>
       </el-table-column>

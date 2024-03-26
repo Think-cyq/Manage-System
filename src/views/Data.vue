@@ -3,7 +3,7 @@
     <el-row :gutter="10" style="margin-bottom: 40px;color: #FFF0F5">
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink;text-align: center">🌈Total number of users🌈</div>
+          <div style="color: lightpink;text-align: center">🌈总人数🌈</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
             {{this.total}}
           </div>
@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink; text-align: center">🧸Total courses🧸</div>
+          <div style="color: lightpink; text-align: center">🧸总课程数🧸</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
             {{ this.course_total }}
           </div>
@@ -19,17 +19,17 @@
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink;text-align: center">🍬popular teacher🍬</div>
+          <div style="color: lightpink;text-align: center">🍬受欢迎老师🍬</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
+            lsy
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="color: lightpink">💝Total number of stores💝</div>
+          <div style="color: lightpink">💝总文章数💝</div>
           <div style="padding: 10px 0; text-align: center; font-weight: bold; ">
-            100
+            {{ this.count }}
           </div>
         </el-card>
       </el-col>
@@ -57,7 +57,8 @@ export default {
       course_total: 0,
       pageNum:0,
       pageSize:0,
-      name: ''
+      name: '',
+      count:0
     }
   },
   mounted() {  //页面元素渲染之后再触发
@@ -158,6 +159,12 @@ export default {
         }
       }).then(res =>{
           this.course_total = res.data.total;
+      }).catch(error => {
+        console.error("Error fetching data:", error);
+        // 处理错误
+      });
+      request.get("/article/count").then(res =>{
+        this.count = res.data;
       }).catch(error => {
         console.error("Error fetching data:", error);
         // 处理错误
