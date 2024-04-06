@@ -35,7 +35,7 @@ export default {
 
 <style>
 .item:hover{
-  color: #3a8ee6;
+  color: rgba(255, 84, 84, 0.16);
   background: none;
 }
 </style>

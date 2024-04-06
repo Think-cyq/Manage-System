@@ -7,8 +7,8 @@
     </div>
     <div style="margin: 10px 0">
       <el-upload
-          :action="'https://' + serverIp + ':9090/file/upload'" :show-file-list="false" :on-success="handleFileUploadSuccess" style="display: inline-block">
-      <el-button round type="primary" class="ml-5">upload files<i class="el-icon-bottom"></i></el-button>
+          :action="'http://' + serverIp + ':9090/file/upload'" :show-file-list="false" :on-success="handleFileUploadSuccess" style="display: inline-block">
+      <el-button round type="primary" class="ml-5">上传文件<i class="el-icon-bottom"></i></el-button>
       </el-upload>
 
       <el-popconfirm
@@ -30,9 +30,9 @@
       <el-table-column prop="name" label="fileName" width="140" align="center"></el-table-column>
       <el-table-column prop="type" label="fileType" width="120" align="center"></el-table-column>
       <el-table-column prop="size" label="fileSize(kb)" align="center"></el-table-column>
-<!--      <el-table-column label="preview">
+      <el-table-column label="预览">
         <template slot-scope="scope">
-          <el-button type="primary" @click="preview(scope.row.url)">download</el-button>
+          <el-button type="primary" @click="preview(scope.row.url)">预览</el-button>
         </template>
       </el-table-column>-->
       <el-table-column label="download">
@@ -184,8 +184,10 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
-    handleFileUploadSuccess(res){
+    handleFileUploadSuccess(res) {
       console.log(res)
+      this.$message.success("上传成功")
+      this.load()
     },
     download(url){
       window.open(url)

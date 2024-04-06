@@ -42,6 +42,7 @@
       <el-col :span="12">
         <div id = 'pie' style="width: 500px; height: 400px"></div>
       </el-col>
+      <el-button @click="sortUsersByLikeNum"></el-button>
     </el-row>
   </div>
 </template>
@@ -58,7 +59,8 @@ export default {
       pageNum:0,
       pageSize:0,
       name: '',
-      count:0
+      count:0,
+      user:[]
     }
   },
   mounted() {  //页面元素渲染之后再触发
@@ -182,6 +184,32 @@ export default {
     })
 
     pieChart.setOption(pieOption);
+  },
+  //统计最受欢迎
+  methods: {
+    MyGet(){
+      request.post("/user",this.user).then(res => {
+        if(res.code === '200'){
+          this.user = res.data;
+        } else{
+          this.$message.error("获取失败!")
+        }
+      })
+    },
+    sortUsersByLikeNum(users) {
+      // 冒泡排序算法
+      for (let i = 0; i < users.length - 1; i++) {
+        for (let j = 0; j < users.length - i - 1; j++) {
+          if (users[j].like_num < users[j + 1].like_num) {
+            // Swap users[j] and users[j+1]
+            const temp = users[j];
+            users[j] = users[j + 1];
+            users[j + 1] = temp;
+          }
+        }
+      }
+      return users;
+    }
   }
 }
 </script>

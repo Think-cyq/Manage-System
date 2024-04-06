@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       // id: this.$route.query.id,
-      // video: {},
+       video: {},
       playerOptions: {
         playbackRates: [0.5, 1.0, 1.5, 2.0], // 可选的播放速度
         autoplay: true, // 如果为true,浏览器准备好时开始回放。
@@ -51,9 +51,9 @@ export default {
     let id =  this.$route.query.id
     this.request("/file/detail/" + id).then(res => {
       console.log(res.data)
-      // this.video = res.data
+       this.video = res.data
       this.playerOptions.sources[0].src = res.data.url
-      this.playerOptions.sources[0].src = "http://vjs.zencdn.net/v/oceans.mp4"
+      // this.playerOptions.sources[0].src = "http://vjs.zencdn.net/v/oceans.mp4"
     })
   },
   methods: {}

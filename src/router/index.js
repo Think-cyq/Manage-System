@@ -60,6 +60,11 @@ const routes = [
         name: 'ArticleDetail',
         component: () => import('../views/front/ArticleDetail')
       },
+      {
+        path: 'film',
+        name: 'Film',
+        component: () => import('../views/front/Film')
+      },
     ]
   },
 ]
